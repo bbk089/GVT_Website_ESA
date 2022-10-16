@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Website menu 09</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="css/style.css">
+
+	</head>
+	<body>
+	<div id="colorlib-page">
+		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
+			<nav id="colorlib-main-menu" role="navigation">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="esa1.html">ESA 1</a></li>
+					<li class="colorlib-active"><a href="esa2.html">ESA 2</a></li>
+					<li><a href="esa3.html">ESA 3</a></li>
+					<li><a href="esa4.html">ESA 4</a></li>
+					<li><a href="esa5.html">ESA 5</a></li>
+					<li><a href="esa6.html">ESA 6</a></li>
+					<li><a href="esa7.html">ESA 7</a></li>
+					<li><a href="esaCCC.html">ESA CCC</a></li>
+					<li><a href="esa9.html">ESA 9</a></li>
+					<li><a href="esa10.html">ESA 10</a></li>
+				</ul>
+			</nav>
+		</aside> <!-- END COLORLIB-ASIDE -->
+
+		<div id="colorlib-main">
+			<section class="ftco-section pt-4 mb-5 ftco-intro">
+				<div class="container-fluid px-3 px-md-0">
+					<div class="row">
+						<div class="col-md-12 mb-4">
+							<h1 class="h2">2D Geometrie aus Linien</h1>
+							<p style="color: #ff6768	;">Spirale auf schwarzer Ebene</p>
+						</div>
+                        <canvas id="canvas" width="500" height="500"></canvas>
+                        
+					</div>
+				</div>
+			</section>
+		</div><!-- END COLORLIB-MAIN -->
+	</div><!-- END COLORLIB-PAGE -->
+
+	</section>
+
+	
+	<script src="js/jquery.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script>
+		// Get the WebGL context
+		var canvas = document.getElementById('canvas');
+		var gl = canvas.getContext('experimental-webgl');
+
+		// Pipeline setup
+		gl.clearColor(0, 0, 0, 1);
+
+		// Compile a vertex shader
+		var vsSource = 'attribute vec2 pos;'+
+			'void main(){gl_Position = vec4(pos * 0.2, 0, 1); }';
+		var vs = gl.createShader(gl.VERTEX_SHADER);
+		gl.shaderSource(vs, vsSource);
+		gl.compileShader(vs);
+
+		// Compile a fragment shader
+		fsSouce =  'void main() { gl_FragColor = vec4(1); }';
+		var fs = gl.createShader(gl.FRAGMENT_SHADER);
+		gl.shaderSource(fs, fsSouce);
+		gl.compileShader(fs);
+
+		// Link together into a program
+		var prog = gl.createProgram();
+		gl.attachShader(prog, vs);
+		gl.attachShader(prog, fs);
+		gl.linkProgram(prog);
+		gl.useProgram(prog);
+
+		// Load vertex data into a buffer
+		var vertices = new Float32Array([
+		0.0, 0.0,
+		-0.5, 0.0,
+		-0.5, -0.5,
+		0.5, -0.5,
+		0.5, 0.5,
+		-1, 0.5,
+		-1, -1,
+		1, -1,
+		1, 1,
+		-1.5, 1,
+		-1.5, -1.5,
+		1.5, -1.5,
+		1.5, 1.5,
+		-2, 1.5,
+		-2, -2,
+		2, -2,
+		2, 2,
+		-2.5, 2,
+		-2.5, -2.5,
+		2.5, -2.5,
+		2.5, 2.5,
+		-3, 2.5,
+		-3, -3,
+		3, -3,
+		3, 3,
+		-3.5, 3,
+		-0.5,0,
+		0,0,
+		3,3,
+		3,-3,
+		0,0,
+		-0.5,0,
+		-0.5, -0.5,
+		-3, -3,]);
+		var vbo = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+		gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+		// Bind vertex buffer to attribute variable
+		var posAttrib = gl.getAttribLocation(prog, 'pos');
+		gl.vertexAttribPointer(posAttrib, 2, gl.FLOAT, false, 0, 0);
+		gl.enableVertexAttribArray(posAttrib);
+
+		// Clear framebuffer and render primitives
+		gl.clear(gl.COLOR_BUFFER_BIT);
+		gl.drawArrays(gl.LINE_STRIP,0,34);
+	</script>
+
+	</body>
+</html>

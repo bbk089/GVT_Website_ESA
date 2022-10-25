@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Website menu 09</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="css/style.css">
+
+	</head>
+	<body>
+	<div id="colorlib-page">
+		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
+			<nav id="colorlib-main-menu" role="navigation">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="esa1.html">ESA 1</a></li>
+					<li><a href="esa2.html">ESA 2</a></li>
+					<li><a href="esa3.html">ESA 3</a></li>
+					<li class="colorlib-active"><a href="esa4.html">ESA 4</a></li>
+					<li><a href="esa5.html">ESA 5</a></li>
+					<li><a href="esa6.html">ESA 6</a></li>
+					<li><a href="esa7.html">ESA 7</a></li>
+					<li><a href="esaCCC.html">ESA CCC</a></li>
+					<li><a href="esa9.html">ESA 9</a></li>
+					<li><a href="esa10.html">ESA 10</a></li>
+				</ul>
+			</nav>
+		</aside> <!-- END COLORLIB-ASIDE -->
+
+		<div id="colorlib-main">
+			<section class="ftco-section pt-4 mb-5 ftco-intro">
+				<div class="container-fluid px-3 px-md-0">
+					<div class="row">
+						<div class="col-md-12 mb-4">
+							<h1 class="h2">Paramatrisierte Flächen</h1>
+							<p style="color: #ff6768	;">Tastenbelegung:</p>
+                            <li>W: Bildwechsel</li>
+						</div>
+                        
+                        <canvas id="canvas" width="500" height="500"></canvas>
+					</div>
+				</div>
+			</section>
+		</div><!-- END COLORLIB-MAIN -->
+	</div><!-- END COLORLIB-PAGE -->
+
+	</section>
+
+	
+	<script src="js/jquery.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+  <script src="js/esa1.js"></script>
+  <script>
+
+document.addEventListener('keydown', function (event) {
+        if (event.code == 'KeyW') {
+          window.location.href = "esa4_2.html";
+          }
+      });
+
+    // Get the WebGL context.
+    var canvas = document.getElementById('canvas');
+    var gl = canvas.getContext('experimental-webgl');
+
+    // Pipeline setup.
+    gl.clearColor(.95, .95, .95, 1);
+    // Backface culling.
+    //gl.frontFace(gl.CCW);
+ //   gl.enable(gl.CULL_FACE);
+ //   gl.cullFace(gl.BACK);
+    // Depth(Z)-Buffer.
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);    
+    // Polygon offset of rastered Fragments.
+    gl.enable(gl.POLYGON_OFFSET_FILL);
+    gl.polygonOffset(0.5, 0);        
+    
+    // Compile vertex shader. 
+    var vsSource = '' + 
+        'attribute vec3 pos;' + 
+        'attribute vec4 col;' + 
+        'varying vec4 color;' + 
+        'void main(){' + 'color = col;' + 
+        'gl_Position = vec4(pos, 1);' +
+        '}';
+    var vs = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vs, vsSource);
+    gl.compileShader(vs);
+
+    // Compile fragment shader.
+    fsSouce = 'precision mediump float;' + 
+        'varying vec4 color;' + 
+        'void main() {' + 
+        'gl_FragColor = color;' + 
+        '}';
+    var fs = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fs, fsSouce);
+    gl.compileShader(fs);
+
+    // Link shader together into a program.
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.bindAttribLocation(prog, 0, "pos");
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    // Vertex data.
+    // Positions, Index data.
+    var vertices, indicesLines, indicesTris;
+    // Fill the data arrays.
+    createVertexData();
+
+    // Setup position vertex buffer object.
+    var vboPos = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vboPos);
+    gl.bufferData(gl.ARRAY_BUFFER,
+        vertices, gl.STATIC_DRAW);
+    // Bind vertex buffer to attribute variable.
+    var posAttrib = gl.getAttribLocation(prog, 'pos');
+    gl.vertexAttribPointer(posAttrib, 3, gl.FLOAT,
+        false, 0, 0);
+    gl.enableVertexAttribArray(posAttrib);
+
+    // Setup constant color.
+    var colAttrib = gl.getAttribLocation(prog, 'col');
+
+    // Setup lines index buffer object.
+    var iboLines = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboLines);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
+        indicesLines, gl.STATIC_DRAW);
+    iboLines.numberOfElements = indicesLines.length;
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+    // Setup tris index buffer object.
+    var iboTris = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboTris);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
+        indicesTris, gl.STATIC_DRAW);
+    iboTris.numberOfElements = indicesTris.length;
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+    // Clear framebuffer and render primitives.
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Setup rendering tris.
+    gl.vertexAttrib4f(colAttrib, 0, 1, 1, 1);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboTris);
+    gl.drawElements(gl.TRIANGLES,
+        iboTris.numberOfElements, gl.UNSIGNED_SHORT, 0);
+    
+    // Setup rendering lines.
+    gl.vertexAttrib4f(colAttrib, 0, 0, 1, 1);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iboLines);
+    gl.drawElements(gl.LINES,
+        iboLines.numberOfElements, gl.UNSIGNED_SHORT, 0);
+        
+    function createVertexData(){
+        var n = 32;
+        var m = 32;
+        // Positions.
+        vertices = new Float32Array(3 * (n+1) * (m+1));
+        // Index data.
+        indicesLines = new Uint16Array(2 * 2 * n * m);
+        indicesTris  = new Uint16Array(3 * 2 * n * m);
+        
+        var du = 2*Math.PI/n;
+        var dv = Math.PI/m;
+        var r = 0.6;
+        // Counter for entries in index array.
+        var iLines = 0;
+        var iTris = 0;
+        var a = 0.5;
+        var b = 0.5;
+        
+        // Loop angle u.
+        for(var i=0, u=-Math.PI; i <= n; i++, u += du) {
+            // Loop height v.
+            for(var j=0, v=0; j <= m; j++, v += dv) {
+                
+                var iVertex = i*(m+1) + j;
+
+                var x = a * Math.cos(u) * Math.cos(v) / 2; 
+                var y = (a * Math.sin(v) + b * u / 2.5) - 0.2; 
+                var z = a * Math.sin(u) * Math.cos(v);
+
+                // Set vertex positions.
+                vertices[iVertex * 3] = x;
+                vertices[iVertex * 3 + 1] = y;
+                vertices[iVertex * 3 + 2] = z;
+                
+                // Set index.
+                // Line on beam.
+                if(j>0 && i>0){
+                    indicesLines[iLines++] = iVertex - 1;
+                    indicesLines[iLines++] = iVertex;
+                 }
+                // Line on ring.
+                if(j>0 && i>0){
+                    indicesLines[iLines++] = iVertex - (m+1);                            
+                    indicesLines[iLines++] = iVertex;
+                }                   
+
+                // Set index.
+                // Two Triangles.
+                if(j>0 && i>0){
+                    indicesTris[iTris++] = iVertex;
+                    indicesTris[iTris++] = iVertex - 1;
+                    indicesTris[iTris++] = iVertex - (m+1);
+                    //                            
+                    indicesTris[iTris++] = iVertex - 1;
+                    indicesTris[iTris++] = iVertex - (m+1) - 1;                            
+                    indicesTris[iTris++] = iVertex - (m+1);                            
+                }
+            }
+        }
+    }    
+</script>
+
+	</body>
+</html>

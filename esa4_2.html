@@ -88,7 +88,7 @@ document.addEventListener('keydown', function (event) {
         'attribute vec4 col;' + 
         'varying vec4 color;' + 
         'void main(){' + 'color = col;' + 
-        'gl_Position = vec4(pos, 1);' +
+        'gl_Position = vec4(pos, 3);' +
         '}';
     var vs = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vs, vsSource);
@@ -178,7 +178,7 @@ document.addEventListener('keydown', function (event) {
         // Counter for entries in index array.
         var iLines = 0;
         var iTris = 0;
-        var a = 0.5;
+        var a = 2;
         var b = 0.5;
         
         // Loop angle u.
@@ -188,9 +188,23 @@ document.addEventListener('keydown', function (event) {
                 
                 var iVertex = i*(m+1) + j;
 
-                var x = u * Math.cos(v); 
-                var y = u * Math.cos(n * v) * Math.sin(v) /2;
-                var z = u * Math.sin(v);
+                var z = Math.cos(u);
+                var x = Math.cos(v);
+                var y = a * Math.sin(u) * Math.sin(v);
+
+            //Enneper´s Surface
+              //  var x = u - ((Math.pow(u,3))/3) + u * Math.pow(v,2);
+              //  var y = v - ((Math.pow(u,3))/3) + u * Math.pow(v,2) * v;
+              //  var z = Math.pow(u,2) - Math.pow(v,2);
+               
+            //Dini´s Surface
+              //  var x = a * Math.cos(u) * Math.sin(v);
+              //  var y = a * Math.sin(u) * Math.sin(v);
+              //  var z = a * [Math.cos(v) + Math.log(Math.tan * (v/2)) ] + b * u;
+               
+               // var x = u * Math.cos(v);
+               // var y = u * Math.cos(n * v) * Math.sin(v) /2;
+               // var z = u * Math.sin(v);
 
                 // Set vertex positions.
                 vertices[iVertex * 3] = x;

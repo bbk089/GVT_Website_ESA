@@ -191,8 +191,8 @@ document.addEventListener('keydown', function (event) {
                         
                         var iVertex = i*(m+1) + j;
 
-                        var x = Math.sin(v) * Math.cos(v) * Math.cos(u);; 
-                        var y = u * Math.sin(v) / 3; 
+                        var y =(Math.sin(v) * Math.cos(v) * Math.cos(u) ) * (-1); 
+                        var x = u * Math.sin(v) / 3 ; 
                         var z = v * Math.cos(u);
 
                         // Set vertex positions.

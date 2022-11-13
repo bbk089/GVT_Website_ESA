@@ -42,6 +42,11 @@
 							<p style="color: #ff6768	;">Tastenbelegung:</p>
                             <li>W: Bildwechsel</li>
                             <li>Bezeichung: Twisted Sphere</li>
+                            
+                            <li>x = 0.5 * cos(u) * cos(v) / 2</li>
+                            <li>y = (0.5 * sin(v) + b * u / 2.5) - 0.2</li>
+                            <li>z = 0.5 * sin(u) * cos(v)</li>
+
 						</div>
                         
                         <canvas id="canvas" width="500" height="500"></canvas>
@@ -122,16 +127,16 @@ document.addEventListener('keydown', function (event) {
     // Setup position vertex buffer object.
     var vboPos = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vboPos);
-    gl.bufferData(gl.ARRAY_BUFFER,
-        vertices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
     // Bind vertex buffer to attribute variable.
     var posAttrib = gl.getAttribLocation(prog, 'pos');
-    gl.vertexAttribPointer(posAttrib, 3, gl.FLOAT,
-        false, 0, 0);
+    gl.vertexAttribPointer(posAttrib, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(posAttrib);
 
     // Setup constant color.
     var colAttrib = gl.getAttribLocation(prog, 'col');
+
+   
 
     // Setup lines index buffer object.
     var iboLines = gl.createBuffer();
@@ -173,6 +178,7 @@ document.addEventListener('keydown', function (event) {
         indicesLines = new Uint16Array(2 * 2 * n * m);
         indicesTris  = new Uint16Array(3 * 2 * n * m);
         
+        
         var du = 2*Math.PI/n;
         var dv = Math.PI/m;
         var r = 0.6;
@@ -181,6 +187,7 @@ document.addEventListener('keydown', function (event) {
         var iTris = 0;
         var a = 0.5;
         var b = 0.5;
+        var iColor;
         
         // Loop angle u.
         for(var i=0, u=-Math.PI; i <= n; i++, u += du) {
@@ -221,6 +228,8 @@ document.addEventListener('keydown', function (event) {
                     indicesTris[iTris++] = iVertex - (m+1) - 1;                            
                     indicesTris[iTris++] = iVertex - (m+1);                            
                 }
+                //Set color
+                
             }
         }
     }    

@@ -139,7 +139,7 @@ var app = ( function() {
 	function initModels() {
         // fillstyle
     var fs = "fill";
-    createModel("torus", fs, [ 1, 1, 1, 1 ], [ 0, 0, 0 ], [ 0, 0, 0 ], [
+    createModel("torus", fs, [ 1, 0.5, 0, 1 ], [ 0, 0, 0 ], [ 0, 0, 0 ], [
         3, 3, 3 ]);
     createModel("plane", "wireframe", [ 1, 1, 1, 1 ], [ 0, -.8, 0 ], [
         0, 0, 0 ], [ 1, 1, 1 ]);

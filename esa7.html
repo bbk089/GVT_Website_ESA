@@ -17,21 +17,30 @@
 	<script src="esa7/GVT_Src_vertexData_torus.js"></script>
 	<script src="esa7/GVT_Src_vertexData_sphere.js"></script>
 	<script src="esa7/GVT_Src_vertexData_plane.js"></script>
-	<script src="esa7/KAP_Src_tpl.js"></script>
+	<script src="esa7/GVT_Src_vertexData_eightTorus.js"></script>
+	<script src="esa7/GVT_Src_vertexData_kranz.js"></script>
+	<script src="esa7/GVT_Src_vertexData_tropfen.js"></script>
+	<script src="esa7/TFM_Src_tpl.js"></script>
 	<script type="x-shader/x-vertex" id="vertexshader">
+		precision mediump float;
+
 		attribute vec3 aPosition;
 		attribute vec3 aNormal;
 
 		uniform mat4 uPMatrix;
 		uniform mat4 uMVMatrix;
+		uniform vec4 uColor;
+		uniform mat3 uNMatrix;
 
 		varying vec4 vColor;
 
-		void main(){
-			gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
+		
 
-			vColor = vec4(aNormal.x, aNormal.y, aNormal.z, 1.0);
-			vColor = (vColor + 1.0) / 2.0;
+		void main(){
+		gl_Position = uPMatrix * uMVMatrix * vec4(aPosition, 1.0);
+		vec3 tNormal = uNMatrix * aNormal;
+	
+		vColor = uColor ;
 		}
 	</script>
 	<script type="x-shader/x-fragment" id="fragmentshader">
@@ -39,7 +48,11 @@
 		varying vec4 vColor;
 
 		void main() {
-			gl_FragColor = vColor;
+			vec4 newColor = vColor;
+			newColor.r = gl_FragCoord.z;
+			newColor.g = gl_FragCoord.z;
+			newColor.b = gl_FragCoord.z;
+			gl_FragColor = newColor;
 		}
 	</script>
 	
@@ -71,10 +84,10 @@
 				<div class="container-fluid px-3 px-md-0">
 					<div class="row">
 						<div class="col-md-12 mb-4">
-							<h1 class="h2">Kamerabewegung</h1>
+							<h1 class="h2">Z-Buffer (Depth-Buffer)</h1>
 							<p style="color: #ff6768	;">Tastenbelegung:</p>
                             <li>W: Nach vorne</li>
-                            <li>A: Nach links (kontinuierliches Drehen: Lange gedrückt halten.)</li>
+                            <li>A: Nach links</li>
                             <li>S: Nach hinten </li>
                             <li>D: Nach rechts</li>
 							<li>&#8593;: Kreisbahn nach oben</li>

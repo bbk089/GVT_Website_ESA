@@ -1,7 +1,7 @@
-var sphere = ( function() {
+var eightTorus = ( function() {
 
 	function createVertexData() {
-		var n = 32;
+		var n = 50;
 		var m = 32;
 
 		// Positions.
@@ -17,8 +17,9 @@ var sphere = ( function() {
 		var indicesTris = this.indicesTris;
 
 		var du = 2 * Math.PI / n;
-		var dv = Math.PI / m;
-		var r = 1;
+		var dv = 2 * Math.PI / m;
+		var r = 0.1;
+		var R = 0.9;
 		// Counter for entries in index array.
 		var iLines = 0;
 		var iTris = 0;
@@ -30,9 +31,14 @@ var sphere = ( function() {
 
 				var iVertex = i * (m + 1) + j;
 
-				var x = r * Math.sin(v) * Math.cos(u);
-				var y = r * Math.sin(v) * Math.sin(u);
-				var z = r * Math.cos(v);
+				var x = (R+r * (Math.cos(u/2) * Math.sin(v) - Math.sin(u/2) * Math.sin(2 * v))) * Math.cos(u) ;
+				var y = (R+r * (Math.cos(u/2) * Math.sin(v) - Math.sin(u/2) * Math.sin(2 * v))) * Math.sin(u) ;
+				var z = r * (Math.sin(u/2) * Math.sin(v) + Math.cos(u/2) * Math.sin(2 * v));
+
+
+				//var x = (R+r * (Math.cos(u/2) * Math.sin(v) - Math.sin(u/2) * Math.sin(2 * v))) * Math.cos(u) ;
+				//var y = (R+r * (Math.cos(u/2) * Math.sin(v) - Math.sin(u/2) * Math.sin(2 * v))) * Math.sin(u) ;
+				//var z = r * (Math.sin(u/2) * Math.sin(v) + Math.cos(u/2) * Math.sin(2 * v));
 
 				// Set vertex positions.
 				vertices[iVertex * 3] = x;
@@ -40,10 +46,16 @@ var sphere = ( function() {
 				vertices[iVertex * 3 + 2] = z;
 
 				// Calc and set normals.
-				var vertexLength = Math.sqrt(x * x + y * y + z * z);
-				normals[iVertex * 3] = x / vertexLength;
-				normals[iVertex * 3 + 1] = y / vertexLength;
-				normals[iVertex * 3 + 2] = z / vertexLength;
+				var nx = Math.cos(u) * Math.cos(v);
+				var ny = Math.cos(u) * Math.sin(v);
+				var nz = Math.sin(u);
+				normals[iVertex * 3] = nx;
+				normals[iVertex * 3 + 1] = ny;
+				normals[iVertex * 3 + 2] = nz;
+
+				// if(i>14){
+				// continue;
+				// }
 
 				// Set index.
 				// Line on beam.

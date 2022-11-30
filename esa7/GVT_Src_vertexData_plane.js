@@ -1,3 +1,4 @@
+// BEGIN exercise plane
 var plane = ( function() {
 
 	function createVertexData() {
@@ -16,24 +17,22 @@ var plane = ( function() {
 		this.indicesTris = new Uint16Array(3 * 2 * n * m);
 		var indicesTris = this.indicesTris;
 
-		var du = 20/n;
-		var dv = 20/m;
-		var r = 0.3;
-		var R = 0.5;
+		var du = 20 / n;
+		var dv = 20 / m;
 		// Counter for entries in index array.
 		var iLines = 0;
 		var iTris = 0;
 
 		// Loop u.
 		for(var i = 0, u = -10; i <= n; i++, u += du) {
-            // Loop v.
-            for(var j = 0, v = -10; j <= m; j++, v += dv) {
+			// Loop v.
+			for(var j = 0, v = -10; j <= m; j++, v += dv) {
 
-                var iVertex = i * (m + 1) + j;
+				var iVertex = i * (m + 1) + j;
 
-                var x = u;
-                var y = 0;
-                var z = v;
+				var x = u;
+				var y = 0;
+				var z = v;
 
 				// Set vertex positions.
 				vertices[iVertex * 3] = x;
@@ -42,12 +41,8 @@ var plane = ( function() {
 
 				// Calc and set normals.
 				normals[iVertex * 3] = 0;
-                normals[iVertex * 3 + 1] = 1;
-                normals[iVertex * 3 + 2] = 0;
-
-				// if(i>14){
-				// continue;
-				// }
+				normals[iVertex * 3 + 1] = 1;
+				normals[iVertex * 3 + 2] = 0;
 
 				// Set index.
 				// Line on beam.
@@ -81,3 +76,4 @@ var plane = ( function() {
 	}
 
 }());
+//END exercise plane

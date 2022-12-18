@@ -101,29 +101,13 @@
 	</script>
 	<script type="x-shader/x-fragment" id="fragmentshader">
 		precision mediump float;
-		varying vec4 vColor;
-			
-			void main() {
-			
-				gl_FragColor = vColor;
-			}
+        varying vec4 vColor;
 
-
-			precision mediump float;
-
-			uniform float threshold;
-			varying vec4 vColor;
-			varying vec3 vNormal;
-			varying vec3 vLightDir;
-			
-			void main() {
-				float intensity = dot(vNormal, vLightDir);
-				if (intensity > threshold) {
-					gl_FragColor = vColor;
-				} else {
-					gl_FragColor = vec4(0.2, 0.2, 0.2, 1.0);
-				}
-			}
+            
+            void main() {
+            
+                gl_FragColor = vColor;
+            }
 	</script>
 	
 

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Website menu 09</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="css/style.css">
+
+	
+	
+	<script src="ext/gl-matrix.js"></script>
+		<script src="esa9/GVT_Src_vertexData_torus.js"></script>
+		<script src="esa9/TXR_Src_earth_tpl.js"></script>
+		<script type="x-shader/x-vertex" id="vertexshader">
+			attribute vec3 aPosition;
+			attribute vec3 aNormal;
+			attribute vec2 aTextureCoord;
+
+			uniform mat4 uPMatrix;
+			uniform mat4 uMVMatrix;
+			uniform mat3 uNMatrix;
+			
+			varying vec3 vNormal;
+			varying vec4 vPosition;
+			
+			varying vec2 vTextureCoord;
+
+			void main(){
+				// Calculte vertex position in eye coordinates. 
+				vec4 tPosition = uMVMatrix * vec4(aPosition, 1.0);
+				// Calculate projektion.
+				gl_Position = uPMatrix * tPosition;
+	
+				vec3 tNormal = normalize(uNMatrix * aNormal);
+				tNormal = uNMatrix * aNormal;
+				
+				vPosition = tPosition;
+				vNormal = tNormal;				
+				vTextureCoord = aTextureCoord;		
+			}
+	</script>
+	<script type="x-shader/x-fragment" id="fragmentshader">
+		precision mediump float;
+			
+			uniform sampler2D uTexture;
+			
+			varying vec2 vTextureCoord;
+			varying vec3 vNormal;
+			varying vec4 vPosition;
+			
+			// Material.
+			struct PhongMaterial {
+				vec3 ka;
+				vec3 kd;
+				vec3 ks;
+				float ke; 
+			};
+			uniform PhongMaterial material;
+			
+			// Ambient light.
+			uniform vec3 ambientLight;
+			
+			// Pointlights.
+			const int MAX_LIGHT_SOURCES = 8;
+			struct LightSource {
+				bool isOn;
+				vec3 position;
+				vec3 color;
+			};
+			uniform LightSource light[MAX_LIGHT_SOURCES];
+			
+			// Phong illumination for single light source,
+			// no ambient light.
+			vec3 phong(vec3 p, vec3 n, vec3 v, LightSource l) {
+			
+				vec3 L = l.color;
+			
+				vec3 s = normalize(l.position - p);
+				vec3 r = reflect(-s, n);
+				
+				float sn = max( dot(s,n), 0.0);
+				float rv = max( dot(r,v), 0.0);
+							
+				vec3 diffuse = material.kd * L * sn;								
+				vec3 specular = material.ks * L * pow(rv, material.ke);
+			
+				return diffuse + specular;			
+			}
+			
+			// Phong illumination for multiple light sources
+			vec3 phong(vec3 p, vec3 n, vec3 v) {
+			
+				// Calculate ambient light.
+				vec3 result = material.ka * ambientLight;
+				
+				// Add light from all light sources.
+				for(int j=0; j < MAX_LIGHT_SOURCES; j++){
+					if(light[j].isOn){
+						result += phong(p, n, v, light[j]);
+					}
+				}
+				return result;
+			}
+			
+			void main() {
+				// Calculate view vector.
+    // For ortho projection:
+    vec3 v = vec3(0,0,-1);
+    
+    vec3 vNormal = normalize(vNormal);
+    
+    vec4 tColor = texture2D(uTexture, vTextureCoord);
+    vec4 lighting = vec4( phong(vPosition.xyz, vNormal, v), 1.0);
+    gl_FragColor = tColor * lighting;
+			}		
+	</script>
+	
+
+	</head>
+	<body onload="app.start()">
+	<div id="colorlib-page">
+		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+		<aside id="colorlib-aside" role="complementary" class="js-fullheight">
+			<nav id="colorlib-main-menu" role="navigation">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="esa1.html">ESA 1</a></li>
+					<li><a href="esa2.html">ESA 2</a></li>
+					<li><a href="esa3.html">ESA 3</a></li>
+					<li><a href="esa4.html">ESA 4</a></li>
+					<li><a href="esa5.html">ESA 5</a></li>
+					<li><a href="esa6.html">ESA 6</a></li>
+					<li><a href="esa7.html">ESA 7</a></li>
+					<li><a href="esa8.html">ESA 8</a></li>
+					<li><a href="esaCCC.html">ESA CCC</a></li>
+					<li class="colorlib-active"><a href="esa9.html">ESA 9</a></li>
+					<li><a href="esa10.html">ESA 10</a></li>
+				</ul>
+			</nav>
+		</aside> <!-- END COLORLIB-ASIDE -->
+
+		<div id="colorlib-main">
+			<section class="ftco-section pt-4 mb-5 ftco-intro">
+				<div class="container-fluid px-3 px-md-0">
+					<div class="row">
+						<div class="col-md-12 mb-4">
+							<h1 class="h2">Torustextur</h1>
+							<p style="color: #ff6768	;">Tastenbelegung:</p>
+                           
+						<div>
+							<li>C: Torustextur wechseln</li>
+                            <li>W,A,S,D: Kamerabewegung</li>
+                           
+						</div>
+						
+				
+						</div>
+						
+						<canvas id="canvas" width="500" height="500"></canvas>
+						
+					</div>
+				</div>
+			</section>
+		</div><!-- END COLORLIB-MAIN -->
+	</div><!-- END COLORLIB-PAGE -->
+
+	</section>
+
+	</body>
+</html>

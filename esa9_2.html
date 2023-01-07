@@ -115,21 +115,19 @@ uniform float u_time;
 			
 			void main() {
 				// Calculate view vector.
-				// For ortho projection:
-				vec3 v = vec3(0,0,0-1);
-  
-  vec3 vNormal = normalize(vNormal);
-  
-  // Modify the calculation of vStrips and hStrips to create a new pattern
-  float vStrips = mod(floor(vTextureCoord.s * 36.), 3.);
-  float hStrips = mod(floor(vTextureCoord.t * 36.), 3.);
-
-  float caros = vStrips * hStrips + (1.-vStrips) * (1.-hStrips) * sin(u_time);
-  vec4 tColor = vec4(1,caros,caros,1);
-
-  
-  vec4 lighting = vec4( phong(vPosition.xyz, vNormal, v), 1.0);
-  gl_FragColor = tColor * lighting;
+                // For ortho projection:
+                vec3 v = vec3(0,0,0-1);
+                
+                vec3 vNormal = normalize(vNormal);
+                                
+                float vStrips = mod(floor(vTextureCoord.s * 50.), 3.);
+                float hStrips = mod(floor(vTextureCoord.t * 50.), 2.);
+                float kStrips = mod(floor(vTextureCoord.t * 50.), 3.);
+                float lStrips = mod(floor(vTextureCoord.t), 4.);                    
+                float caros = vStrips * hStrips + (1.-vStrips) * (1.-hStrips) * kStrips - lStrips;
+                vec4 tColor = vec4(1.,hStrips,caros,1);
+                vec4 lighting = vec4( phong(vPosition.xyz, vNormal, v), 1.0);
+                gl_FragColor = tColor * lighting;
 			}			
 	</script>
 	

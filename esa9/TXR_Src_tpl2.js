@@ -382,8 +382,11 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T , gl.MIRRORED_REPEAT);
 				case('Y'):
 					interactiveModel.rotate[1] += sign * deltaRotate;
 					break;
-				case('Z'):
-					interactiveModel.rotate[2] += sign * deltaRotate;
+				case('A'):
+					interactiveModel.rotate[2] += 1 * deltaRotate;
+					break;
+				case('D'):
+					interactiveModel.rotate[2] += -1 * deltaRotate;
 					break;
 			}
 			// Scale/squeese interactiveModel.
@@ -410,11 +413,11 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T , gl.MIRRORED_REPEAT);
 			}
 			// Camera move and orbit.
 			switch(c) {
-				case('A'):
+				case('Z'):
 					// Orbit camera.
 					camera.zAngle += 1 * deltaRotate;
 					break;
-				case('D'):
+				case('Y'):
 					// Orbit camera.
 					camera.zAngle += -1 * deltaRotate;
 					break;
